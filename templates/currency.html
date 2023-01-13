@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<center>
+    <form action="." method="GET">
+        <table class="table table-striped table-hover">
+            <tr align="center">
+                <td><h2>查詢日期</h2></td>
+                <td><h2>查詢時間</h2></td>
+                <td><h2>幣別</h2></td>
+                <td><h2>即期買入</h2></td>
+                <td><h2>即期賣出</h2></td>
+                <td><h2>現金買入</h2></td>
+                <td><h2>現金賣出</h2></td>
+            </tr>
+            <tr>
+                <td colspan="7"><hr></td>
+            </tr>
+            <tr align="center">
+                <td name="search_date">{{search_date}}</td>
+                <td name="search_time">{{search_time}}</td>
+                <td name="country">{{country}}</td>
+                <td name="sight_in">{{sight_in}}</td>
+                <td name="sight_out">{{sight_out}}</td>
+                <td name="cash_in">{{cash_in}}</td>
+                <td name="cash_out">{{cash_out}}</td>
+            </tr>
+            <tr align="center">
+                <td colspan="7"><h4>{{message}}</h4></td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <button type="submit" name="usd" class="btn btn-outline-success">查詢美金匯率</button>
+                    <button type="submit" name="aus" class="btn btn-outline-success">查詢澳幣匯率</button>
+                    <button type="submit" name="jpy" class="btn btn-outline-success">查詢日圓匯率</button>
+                </td>
+                <td colspan="2" align="center">
+                    <a href="/currency/"><button class="btn btn-outline-dark">重新查詢</button></a>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <table class="table table-striped table-hover">
+        <tr>
+            <td>
+                <a href="/usd_history/" ><button class="btn btn-outline-secondary">查看美金歷史紀錄</button></a>
+                <a href="/aus_history/" ><button class="btn btn-outline-secondary">查看澳幣歷史紀錄</button></a>
+                <a href="/jpy_history/" ><button class="btn btn-outline-secondary">查看日圓歷史紀錄</button></a>
+            </td>
+        </tr>
+    </table>
+</center>
+{% else %}
+<center>
+    <p>You are not logged in</p>
+    <h4><a href="/index/"><button class="btn btn-outline-dark">RETURN</button></a></h4>
+</center>
+{% endif %}
+{% endblock %}

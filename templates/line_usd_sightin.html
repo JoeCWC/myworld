@@ -1,0 +1,83 @@
+{% extends "base2.html" %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3 sidebar-sticky">
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+          <span>Saved Reports</span>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item">
+            <a class="nav-link" href="/line_usd_sightin/">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              即期買入 Sight In
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/line_usd_sightout/">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              即期賣出 Sight Out
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/line_usd_cashin/">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              現金買入 Cash In
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/line_usd_cashout/">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              現金賣出 Cash Out
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">{{message}}</h1>
+  </div>
+
+  <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+
+  <h2>資料表</h2>
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th scope="col">日期</th>
+          <th scope="col">即期買入</th>
+          <th scope="col">即期賣出</th>
+          <th scope="col">現金買入</th>
+          <th scope="col">現金賣出</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in data reversed %}
+        <tr>
+          <td>{{x.search_date}}</td>
+          <td>{{x.sight_in}}</td>
+          <td>{{x.sight_out}}</td>
+          <td>{{x.cash_in}}</td>
+          <td>{{x.cash_out}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</main>
+{% else %}
+<CENTER>
+  <h4>You are not logged in</h4>
+  <h4><a href="/index/"><button class="btn btn-outline-dark">RETURN</button></a></h4>
+</CENTER>
+{% endif %}
+
+{% endblock %}

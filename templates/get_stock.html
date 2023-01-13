@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<center>
+    <form action="." method="POST" >
+        {% csrf_token %}
+        <table border="0" width="60%">
+            <tr align="left">
+                <td><h2>1.中華電信</h2></td>
+                <td><h2>2.台積電</h2></td>
+                <td><h2>3.聯發科</h2></td>
+                <td><h2>4.富邦金</h2></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="choice" placeholder="請輸入號碼" aria-describedby="button-addon2">
+                        <button class="btn btn-dark" type="submit" id="button-addon2">查詢</button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4"><hr></td>
+            </tr>
+            <tr>
+                <td colspan="4"><h4>{{message}}</h4></td>
+            </tr>
+            {% for k,v in stock.items %}
+            <tr>
+                <td colspan="4">{{k}}:{{v}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+</center>
+{% else %}
+<center>
+    <p>You are not logged in</p>
+    <h4><a href="/index/"><button class="btn btn-outline-dark">RETURN</button></a></h4>
+</center>
+{% endif %}
+{% endblock %}

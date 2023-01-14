@@ -102,58 +102,57 @@ def get_stock_info(webtxt):
 	return stock
 
 def currency(request):
+	if 'usd' in request.GET:
+		current = get_current()
+		soup = BeautifulSoup(current, "html.parser")
+		table = soup.find("table", class_="table table-striped table-bordered table-condensed table-hover")
+		tbody = table.find("tbody")
+		country = tbody.find_all("div", class_="hidden-phone print_show")[0].text.strip()
+		sight_in = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[0].text.strip()
+		sight_out = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[1].text.strip()
+		cash_in = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[0].text.strip()
+		cash_out = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[1].text.strip()
+		search_date = time.strftime("%Y年%m月%d日")
+		search_time = time.strftime("%H點%M分")
+		message = "查詢成功"
+		data = usd_rate.objects.create(country=country,sight_in=sight_in,sight_out=sight_out,cash_in=cash_in,
+									   cash_out=cash_out,search_date=search_date,search_time=search_time)
+		data.save()
 
-		if 'usd' in request.GET:
-			current = get_current()
-			soup = BeautifulSoup(current, "html.parser")
-			table = soup.find("table", class_="table table-striped table-bordered table-condensed table-hover")
-			tbody = table.find("tbody")
-			country = tbody.find_all("div", class_="hidden-phone print_show")[0].text.strip()
-			sight_in = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[0].text.strip()
-			sight_out = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[1].text.strip()
-			cash_in = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[0].text.strip()
-			cash_out = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[1].text.strip()
-			search_date = time.strftime("%Y年%m月%d日")
-			search_time = time.strftime("%H點%M分")
-			message = "查詢成功"
-			data = usd_rate.objects.create(country=country,sight_in=sight_in,sight_out=sight_out,cash_in=cash_in,
-										   cash_out=cash_out,search_date=search_date,search_time=search_time)
-			data.save()
+	elif 'aus' in request.GET:
+		current = get_current()
+		soup = BeautifulSoup(current, "html.parser")
+		table = soup.find("table", class_="table table-striped table-bordered table-condensed table-hover")
+		tbody = table.find("tbody")
+		country = tbody.find_all("div", class_="hidden-phone print_show")[3].text.strip()
+		sight_in = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[6].text.strip()
+		sight_out = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[7].text.strip()
+		cash_in = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[6].text.strip()
+		cash_out = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[7].text.strip()
+		search_date = time.strftime("%Y年%m月%d日")
+		search_time = time.strftime("%H點%M分")
+		message = "查詢成功"
+		data = aus_rate.objects.create(country=country, sight_in=sight_in, sight_out=sight_out, cash_in=cash_in,
+									   cash_out=cash_out, search_date=search_date, search_time=search_time)
+		data.save()
 
-		elif 'aus' in request.GET:
-			current = get_current()
-			soup = BeautifulSoup(current, "html.parser")
-			table = soup.find("table", class_="table table-striped table-bordered table-condensed table-hover")
-			tbody = table.find("tbody")
-			country = tbody.find_all("div", class_="hidden-phone print_show")[3].text.strip()
-			sight_in = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[6].text.strip()
-			sight_out = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[7].text.strip()
-			cash_in = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[6].text.strip()
-			cash_out = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[7].text.strip()
-			search_date = time.strftime("%Y年%m月%d日")
-			search_time = time.strftime("%H點%M分")
-			message = "查詢成功"
-			data = aus_rate.objects.create(country=country, sight_in=sight_in, sight_out=sight_out, cash_in=cash_in,
-										   cash_out=cash_out, search_date=search_date, search_time=search_time)
-			data.save()
-
-		elif 'jpy' in request.GET:
-			current = get_current()
-			soup = BeautifulSoup(current, "html.parser")
-			table = soup.find("table", class_="table table-striped table-bordered table-condensed table-hover")
-			tbody = table.find("tbody")
-			country = tbody.find_all("div", class_="hidden-phone print_show")[7].text.strip()
-			sight_in = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[14].text.strip()
-			sight_out = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[15].text.strip()
-			cash_in = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[14].text.strip()
-			cash_out = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[15].text.strip()
-			search_date = time.strftime("%Y年%m月%d日")
-			search_time = time.strftime("%H點%M分")
-			message = "查詢成功"
-			data = jpy_rate.objects.create(country=country, sight_in=sight_in, sight_out=sight_out, cash_in=cash_in,
-										   cash_out=cash_out, search_date=search_date, search_time=search_time)
-			data.save()
-		return render(request,"currency.html",locals())
+	elif 'jpy' in request.GET:
+		current = get_current()
+		soup = BeautifulSoup(current, "html.parser")
+		table = soup.find("table", class_="table table-striped table-bordered table-condensed table-hover")
+		tbody = table.find("tbody")
+		country = tbody.find_all("div", class_="hidden-phone print_show")[7].text.strip()
+		sight_in = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[14].text.strip()
+		sight_out = tbody.find_all("td", class_="rate-content-sight text-right print_hide")[15].text.strip()
+		cash_in = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[14].text.strip()
+		cash_out = tbody.find_all("td", class_="rate-content-cash text-right print_hide")[15].text.strip()
+		search_date = time.strftime("%Y年%m月%d日")
+		search_time = time.strftime("%H點%M分")
+		message = "查詢成功"
+		data = jpy_rate.objects.create(country=country, sight_in=sight_in, sight_out=sight_out, cash_in=cash_in,
+									   cash_out=cash_out, search_date=search_date, search_time=search_time)
+		data.save()
+	return render(request,"currency.html",locals())
 
 def get_current():
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" 

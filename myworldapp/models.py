@@ -5,7 +5,7 @@ class usd_rate(models.Model):
     search_date = models.CharField(max_length=20,default='')
     search_time = models.CharField(max_length=20,default='')
     country = models.CharField(max_length=20,default='')
-    sight_in = models.CharField(max_length=2,default='')
+    sight_in = models.CharField(max_length=20,default='')
     sight_out = models.CharField(max_length=20,default='')
     cash_in = models.CharField(max_length=20,default='')
     cash_out = models.CharField(max_length=20,default='')

@@ -15,7 +15,7 @@ def index(request):
 def main(request):
 	return render(request,"main.html",locals())
 
-def login_request(request):
+def login_request(request): #登入功能
 	if request.method == "POST":
 		form = AuthenticationForm(request, data=request.POST)
 		if form.is_valid():
@@ -33,7 +33,7 @@ def login_request(request):
 	form = AuthenticationForm()
 	return render(request=request, template_name="login.html", context={"login_form":form})
 
-def register_request(request):
+def register_request(request): #註冊功能
 	if request.method == "POST":
 		form = NewUserForm(request.POST)
 		if form.is_valid():
@@ -46,10 +46,10 @@ def register_request(request):
 	form = NewUserForm()
 	return render (request=request, template_name="register.html", context={"register_form":form})
 
-def logout(request):
+def logout(request): #登出
 	return redirect("index")
 
-def chose(request):
+def chose(request): #選擇股價
 	if request.method =="POST":
 		choice = request.POST['choice']
 		URL = "https://www.google.com/search?q="
@@ -78,9 +78,9 @@ def chose(request):
 
 	return render(request,"get_stock.html",locals())
 
-def get_stock(url, stock_id):
+def get_stock(url, stock_id): #抓取股價網頁
 	headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-							 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36'}
+							 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36'} #瀏覽器header
 	resp = requests.get(url + stock_id, headers=headers)
 	if resp.status_code != 200:
 		#print("Invalid url:", resp.url)
@@ -89,7 +89,7 @@ def get_stock(url, stock_id):
 		return resp.text
 
 
-def get_stock_info(webtxt):
+def get_stock_info(webtxt): #股價爬蟲
 	soup = BeautifulSoup(webtxt, "html.parser")
 	stock = dict()
 	section = soup.find_all("g-card-section")
@@ -101,7 +101,7 @@ def get_stock_info(webtxt):
 			stock[key] = value
 	return stock
 
-def currency(request):
+def currency(request): #匯率爬蟲
 	if 'usd' in request.GET:
 		current = get_current()
 		soup = BeautifulSoup(current, "html.parser")
@@ -154,7 +154,7 @@ def currency(request):
 		data.save()
 	return render(request,"currency.html",locals())
 
-def get_current():
+def get_current(): #抓取匯率網頁
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" 
                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
     resp = requests.get("https://rate.bot.com.tw/xrt?Lang=zh-TW",headers=headers)
@@ -164,7 +164,7 @@ def get_current():
     else:
         return resp.text
 
-def usd_history(request):
+def usd_history(request): #呈現美金匯率資料
 	data = usd_rate.objects.all()
 	max_sightin = usd_rate.objects.aggregate(Max('sight_in'))
 	min_sightin = usd_rate.objects.aggregate(Min('sight_in'))
@@ -176,7 +176,7 @@ def usd_history(request):
 	min_cashout = usd_rate.objects.aggregate(Min('cash_out'))
 	return render(request,"usd_history.html",locals())
 
-def aus_history(request):
+def aus_history(request): #呈現澳幣匯率資料
 	data = aus_rate.objects.all()
 	max_sightin = aus_rate.objects.aggregate(Max('sight_in'))
 	min_sightin = aus_rate.objects.aggregate(Min('sight_in'))
@@ -188,7 +188,7 @@ def aus_history(request):
 	min_cashout = aus_rate.objects.aggregate(Min('cash_out'))
 	return render(request,"aus_history.html",locals())
 
-def jpy_history(request):
+def jpy_history(request): #呈現日圓匯率資料
 	data = jpy_rate.objects.all()
 	max_sightin = jpy_rate.objects.aggregate(Max('sight_in'))
 	min_sightin = jpy_rate.objects.aggregate(Min('sight_in'))
@@ -200,7 +200,7 @@ def jpy_history(request):
 	min_cashout = jpy_rate.objects.aggregate(Min('cash_out'))
 	return render(request,"jpy_history.html",locals())
 
-def line_usd_sightin(request):
+def line_usd_sightin(request): #美金資料折線圖
 	data = usd_rate.objects.all()
 	message = "美金走勢 - 即期買入"
 	sight_in = usd_rate.objects.values_list('sight_in',flat=True)
@@ -217,7 +217,7 @@ def line_usd_sightin(request):
 	}
 	return render(request,"line_usd_sightin.html",locals())
 
-def line_usd_sightout(request):
+def line_usd_sightout(request): #美金資料折線圖
 	data = usd_rate.objects.all()
 	message = "美金走勢 - 即期賣出"
 	sight_out = usd_rate.objects.values_list('sight_out',flat=True)
@@ -234,7 +234,7 @@ def line_usd_sightout(request):
 	}
 	return render(request,"line_usd_sightout.html",locals())
 
-def line_usd_cashin(request):
+def line_usd_cashin(request): #美金資料折線圖
 	data = usd_rate.objects.all()
 	message = "美金走勢 - 現金買入"
 	cash_in = usd_rate.objects.values_list('cash_in',flat=True)
@@ -251,7 +251,7 @@ def line_usd_cashin(request):
 	}
 	return render(request,"line_usd_cashin.html",locals())
 
-def line_usd_cashout(request):
+def line_usd_cashout(request): #美金資料折線圖
 	data = usd_rate.objects.all()
 	message = "美金走勢 - 現金賣出"
 	cash_out = usd_rate.objects.values_list('cash_out',flat=True)
@@ -269,7 +269,7 @@ def line_usd_cashout(request):
 	return render(request,"line_usd_cashout.html",locals())
 
 
-def line_aus_sightin(request):
+def line_aus_sightin(request): #澳幣資料折線圖
 	data = aus_rate.objects.all()
 	message = "澳幣走勢 - 即期買入"
 	sight_in = aus_rate.objects.values_list('sight_in',flat=True)
@@ -286,7 +286,7 @@ def line_aus_sightin(request):
 	}
 	return render(request,"line_aus_sightin.html",locals())
 
-def line_aus_sightout(request):
+def line_aus_sightout(request): #澳幣資料折線圖
 	data = aus_rate.objects.all()
 	message = "澳幣走勢 - 即期賣出"
 	sight_out = aus_rate.objects.values_list('sight_out',flat=True)
@@ -303,7 +303,7 @@ def line_aus_sightout(request):
 	}
 	return render(request,"line_aus_sightout.html",locals())
 
-def line_aus_cashin(request):
+def line_aus_cashin(request): #澳幣資料折線圖
 	data = aus_rate.objects.all()
 	message = "澳幣走勢 - 現金買入"
 	cash_in = aus_rate.objects.values_list('cash_in',flat=True)
@@ -320,7 +320,7 @@ def line_aus_cashin(request):
 	}
 	return render(request,"line_aus_cashin.html",locals())
 
-def line_aus_cashout(request):
+def line_aus_cashout(request): #澳幣資料折線圖
 	data = aus_rate.objects.all()
 	message = "澳幣走勢 - 現金賣出"
 	cash_out = aus_rate.objects.values_list('cash_out',flat=True)
@@ -339,7 +339,7 @@ def line_aus_cashout(request):
 
 
 
-def line_jpy_sightin(request):
+def line_jpy_sightin(request): #日圓資料折線圖
 	data = jpy_rate.objects.all()
 	message = "日圓走勢 - 即期買入"
 	sight_in = jpy_rate.objects.values_list('sight_in',flat=True)
@@ -356,7 +356,7 @@ def line_jpy_sightin(request):
 	}
 	return render(request,"line_jpy_sightin.html",locals())
 
-def line_jpy_sightout(request):
+def line_jpy_sightout(request): #日圓資料折線圖
 	data = jpy_rate.objects.all()
 	message = "日圓走勢 - 即期賣出"
 	sight_out = jpy_rate.objects.values_list('sight_out',flat=True)
@@ -373,7 +373,7 @@ def line_jpy_sightout(request):
 	}
 	return render(request,"line_jpy_sightout.html",locals())
 
-def line_jpy_cashin(request):
+def line_jpy_cashin(request): #日圓資料折線圖
 	data = jpy_rate.objects.all()
 	message = "日圓走勢 - 現金買入"
 	cash_in = jpy_rate.objects.values_list('cash_in',flat=True)
@@ -390,7 +390,7 @@ def line_jpy_cashin(request):
 	}
 	return render(request,"line_jpy_cashin.html",locals())
 
-def line_jpy_cashout(request):
+def line_jpy_cashout(request): #日圓資料折線圖
 	data = jpy_rate.objects.all()
 	message = "日圓走勢 - 現金賣出"
 	cash_out = jpy_rate.objects.values_list('cash_out',flat=True)
@@ -408,8 +408,6 @@ def line_jpy_cashout(request):
 	return render(request,"line_jpy_cashout.html",locals())
 
 
-def testindex(request):
-	return render(request,"testindex.html",locals())
 
 
 
